@@ -1,3 +1,11 @@
+/**
+ * Stores information specific to tile types.
+ *
+ * {string} char The character to display
+ * {boolean} passable whether or not the player can walk on the tile
+ * {boolean} transparent whether ot not the player can see through the tile
+ * {Array} fg the rgb foreground color of the tile
+ */
 var Tiles = {
     wall: {
         char: '#',

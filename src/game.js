@@ -5,31 +5,31 @@ var Game = function(seed) {
 
     // predetermined or random seed for the prng
     this.seed = seed || Math.floor(9e9 * Math.random());
-    
+
     // general prng
     this.prng = new MersenneTwister(this.seed);
-    
+
     // seeds for each level
     this.levelSeeds = [];
     for (var i = 1; i < 6; i++) {
         this.levelSeeds[i] = this.seed + i;
     }
-    
+
     // current depth
     this.depth = 1;
-    
+
     // store the previously visited level
     this.oldLevel = undefined;
-    
+
     // create the player
     this.player = newActor('player');
     this.player.delay = 1;
     Schedule.add(this.player, 0);
-    
+
     // create the first level
     this.level = new Level(this.player, this.depth, this.depth + this.levelSeeds[1]);
     var level = this.level;
-    
+
     // place the player
     this.player.x = 0;
     this.player.y = 0;
@@ -37,7 +37,7 @@ var Game = function(seed) {
         this.player.x = 1 + Math.floor((Display.w - 2) * this.prng.random());
         this.player.y = 1 + Math.floor((Display.h - 2) * this.prng.random());
     }
-    
+
     this.player.act = function() {
         // resolve player attacks
         if (!this.doAttack()) {
@@ -46,7 +46,7 @@ var Game = function(seed) {
             if (!game.level.monsters.length) {
                 Buffer.log('A winner is you!');
                 return;
-            }  
+            }
             input.mode = 'playing';
         }
     };

@@ -1,3 +1,7 @@
+/**
+ * Handles drawing on the main canvas
+ */
+
 var Display = {
     // width in cells
     w: 49,
@@ -23,18 +27,19 @@ document.getElementById('game').insertBefore(Display.canvas, document.getElement
 // Give the game element a width so it can be centered
 document.getElementById('game').style.width = (Display.w * Display.cw) + 'px';
 
-// Draw a single cell
-// x - x coordinate in cells
-// y - y coordinate in cells
-// char - character to be drawn (string or array)
-// fg - foreground color of character (string or array)
-// clear - clear the old cell before drawing the new one (default true)
+/**
+ * Draw a single cell
+ * @param {number} x x coordinate in cells
+ * @param {number} y y coordinate in cells
+ * @param {strung} char the character of the cell
+ * @param {Array} fg the rgb color of the cell
+ */
 Display.draw = function(x, y, char, fg) {
+    /** Turn the fg array into a string parseable by CSS */
     var arrToColor =  function(color) {
         return 'rgb(' + Math.floor(color[0]) + ',' + Math.floor(color[1]) + ',' + Math.floor(color[2]) + ')';
     };
-    
-    //clear = clear || true;
+
     if (typeof char === 'string') {
         Display.ctx.fillStyle = arrToColor(fg);
         Display.ctx.fillText(char, (x + 0.5) * Display.cw, (y + 0.875) * Display.ch);

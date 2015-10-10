@@ -1,6 +1,6 @@
 var map = function(player, depth, prng, w, h) {
     var map = [];
-    
+
     // fill the map with walls
     // outer edges are filled with outer walls
     for (var x = 0; x < w; x++) {
@@ -13,7 +13,7 @@ var map = function(player, depth, prng, w, h) {
             }
         }
     }
-    
+
     // a list of rooms (rectangles)
     // initially there is one room covering the whole level (except the edges)
     var rooms = [{
@@ -22,7 +22,7 @@ var map = function(player, depth, prng, w, h) {
         w: w + 10,
         h: h + 10
     }];
-    
+
     // take a list of rooms, and recursively partition each one of them
     // if possible
     var partition = function(rooms) {
@@ -81,7 +81,7 @@ var map = function(player, depth, prng, w, h) {
         }
     };
     rooms = partition(rooms);
-    
+
     // destroy rooms on the outer edge of the map
     // and
     // room.neighbors holds all the neighboring rooms and room.connected
@@ -96,7 +96,7 @@ var map = function(player, depth, prng, w, h) {
             rooms[i].i = i;
         }
     }
-    
+
     // specify the neighbors of each room
     for (var i = 0; i < rooms.length; i++) {
         // note that, because of the way we partitioned the rooms, the rooms
@@ -116,7 +116,7 @@ var map = function(player, depth, prng, w, h) {
             }
         }
     }
-    
+
     // number of visited rooms
     var roomsLength = 0;
     // size of each floodfill
@@ -124,7 +124,7 @@ var map = function(player, depth, prng, w, h) {
     var floodfill = function() {
         var count = 0;
         var fill = counts.length;
-    
+
         // use a recursive backtracker to connect rooms
         // curr - current room
         // prev - previous room
@@ -147,13 +147,13 @@ var map = function(player, depth, prng, w, h) {
                 }
             }
         };
-        
+
         // choose an unvisited room
         var room;
         do {
             room = rooms[Math.floor(rooms.length * prng.random())];
         } while (room.fill);
-        
+
         backtrack(room, undefined, fill);
         roomsLength += count;
         counts[fill] = count;
@@ -169,7 +169,7 @@ var map = function(player, depth, prng, w, h) {
             rooms.splice(i, 1);
         }
     }
-    
+
     // connect random rooms to make loops
     for (var i = 0; i < rooms.length; i++) {
         for (var j = i + 1; j < rooms.length; j++) {
@@ -179,7 +179,7 @@ var map = function(player, depth, prng, w, h) {
             }
         }
     }
-    
+
     // add the rooms to the map
     for (var i = 0; i < rooms.length; i++) {
         var room = rooms[i];
@@ -189,7 +189,7 @@ var map = function(player, depth, prng, w, h) {
             }
         }
     }
-    
+
     // place the doors on the map
     for (var i = 0; i < rooms.length; i++) {
         for (var j = i + 1; j < rooms.length; j++) {
@@ -215,7 +215,7 @@ var map = function(player, depth, prng, w, h) {
             }
         }
     }
-    
+
     // create monsters
     for (var i = 0; i < rooms.length; i++) {
         var monster = prng.random() < 0.5 ? newActor('coward') : newActor('duelist');
@@ -224,7 +224,7 @@ var map = function(player, depth, prng, w, h) {
         monster.y = rooms[i].y + Math.floor(rooms[i].h * prng.random());
         Schedule.add(monster, 0.1);
     }
-    
+
     return map;
 };
 
@@ -334,14 +334,14 @@ var distance = function(x1, y1, x2, y2) {
 Level.prototype.draw = function(player) {
     var w = Display.w;
     var h = Display.h;
-    
+
     for (var x = 0; x < w; x++) {
         for (var y = 0; y < h; y++) {
             this.visible[x][y] = false;
         }
     }
     this.fov(player.x, player.y, 9e9);
-    
+
     Display.ctx.clearRect(0, 0, w * Display.cw, h * Display.ch);
     for (var x = 0; x < w; x++) {
         for (var y = 0; y < h; y++) {

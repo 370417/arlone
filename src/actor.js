@@ -25,7 +25,7 @@ Actor.attack = function(direction) {
     for (var i = 0; i < game.level.monsters.length; i++) {
         var monster = game.level.monsters[i];
         if (monster.attackDirection[0] || monster.attackDirection[1]) {
-            
+
         }
         if (targetX === monster.x && targetY === monster.y) {
             this.attackType = 'dodge';
@@ -39,7 +39,7 @@ Actor.attack = function(direction) {
             this.attackTarget = game.player;
         }
     }
-    
+
     Schedule.add(this, this.delay);
     Schedule.advance().act();
 }
@@ -61,7 +61,7 @@ Actor.move = function(direction) {
     };
     destination.name = window.game.level.map[destination.x][destination.y];
     destination.info = Tiles[destination.name];
-    
+
     // check if there's a monster in the way
     for (var i = 0; i < game.level.monsters.length; i++) {
         var monster = window.game.level.monsters[i];
@@ -74,7 +74,7 @@ Actor.move = function(direction) {
             return;
         }
     }
-    
+
     // check if the player is in the way
     if (this.name !== 'player') {
         var player = game.player;
@@ -111,7 +111,7 @@ Actor.move = function(direction) {
         Schedule.add(this, this.delay);
         Schedule.advance().act();
     }
-    
+
 };
 
 Actor.moveTo = function(targetX, targetY) {

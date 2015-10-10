@@ -93,7 +93,7 @@ input.keyDown = function(e) {
         else if (key === 'u' || key === '9') {
             player.move([1, -1]);
         }
-        
+
         else if (key === 'Up' || key === 'ArrowUp' || key === 'w') {
             if (input.pressed === '') {
                 input.pressed = 'up';
@@ -181,7 +181,7 @@ input.keyDown = function(e) {
         else if (key === 'u' || key === '9') {
             player.attack([1, -1]);
         }
-        
+
         else if (key === 'Up' || key === 'ArrowUp' || key === 'w') {
             if (input.pressed === '') {
                 input.pressed = 'up';
@@ -246,9 +246,9 @@ input.keyDown = function(e) {
 
 input.keyUp = function(e) {
     var key = input.keyCode[e.keyCode] || e.key || 'Unknown';
-    
+
     var player = window.game.player;
-    
+
     if (input.mode === 'playing') {
         if (input.pressed === 'up' && (key === 'Up' || key === 'ArrowUp' || key === 'w')) {
             input.pressed = '';
