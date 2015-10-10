@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>RL</title>
+    <link rel="stylesheet" href="Resources/style.css" type="text/css">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div id="game">
+      <div id="buffer"><div>Lunging has not been implemented.</div><div>Use the arrow keys to move, Z to attack, and X to lunge.</div><div>Press ? for help.</div></div>
+      <div id="bottom">
+        <span class="button" id="Z">[Z] Attack</span><span class="button" id="X">[X] Lunge</span><span>[?] Help</span>
+      </div>
+      <div id="help">
+        Commands<br>
+        Use the number pad or the arrow keys to move. Hold down multiple arrow keys to move diagonally.<br>
+        WASD and vi keys work too.<br><br>
+        Attack by pressing [Z] and then a direction.<br>
+        Similarly, lunge by pressing [X] and then a direction.<br><br>
+        Open this help screen again with the [?] key.<br><br>
+        Tiles<br>
+        <span class="tile" style="color: rgb(255, 255, 255)">@</span> you<br>
+        <span class="tile" style="color: rgb(185, 185, 185)">·</span> floor<br>
+        <span class="tile" style="color: rgb(200, 200, 200)">#</span> wall<br>
+        <span class="tile" style="color: rgb(222, 111,  55)">+</span> closed door<br>
+        <span class="tile" style="color: rgb(222, 111,  55)">−</span> open door
+      </div>
+    </div>
+    <script src="Resources/font.js"></script>
+    <script src="Resources/prng.js"></script>
+    <script src="Resources/schedule.js"></script>
+    <script src="Resources/input.js"></script>
+    <script src="Resources/tiles.js"></script>
+    <script src="Resources/buffer.js"></script>
+    <script src="Resources/display.js"></script>
+    <script src="Resources/level.js"></script>
+    <script src="Resources/actor.js"></script>
+    <script src="Resources/game.js"></script>
+  </body>
+</html>

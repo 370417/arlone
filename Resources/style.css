@@ -1,0 +1,58 @@
+@font-face {
+    font-family: 'DejaVu Sans';
+    src: url('DejaVuSans-webfont.eot');
+    src: url('DejaVuSans-webfont.eot?#iefix') format('embedded-opentype'),
+         url('DejaVuSans-webfont.woff') format('woff'),
+         url('DejaVuSans-webfont.ttf') format('truetype'),
+         url('DejaVuSans-webfont.svg#dejavu_sansbook') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background: #000;
+    color: #EEE;
+    font: 14px/16px 'DejaVu Sans', monospace;
+    margin: 0;
+}
+
+#game {
+    margin: 21px auto;
+    position: relative;
+}
+
+#buffer {
+    height: 63px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+#buffer div:first-child {
+    color: #888;
+}
+
+#buffer div:nth-child(2) {
+    color: #BBB;
+}
+
+#bottom .button {
+    display: inline-block;
+    padding: 8px 24px 8px 0;
+}
+
+#help {
+    background: #000;
+    border: 1px solid rgb(200, 200, 200);
+    display: none;
+    height: 448px;
+    line-height: 1.5;
+    padding: 7px 10.5px;
+    position: absolute;
+    top: 71px;
+}
+
+.tile {
+    display: inline-block;
+    text-align: center;
+    width: 14px;
+}
