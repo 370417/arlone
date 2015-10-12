@@ -249,9 +249,23 @@ var Level = function(player, depth, seed) {
     this.map = map.call(this, player, depth, this.prng, this.w, this.h);
 };
 
-// cy, cx - origin of fov
+/**
+ * Run a recursive shadowcasting fov algorithm and update visibility of tiles
+ *
+ * @param {number} cx x coordinate of center of fov
+ * @param {number} cy y coordinate of center of fov
+ * @param {number} range range of fov
+ */
 Level.prototype.fov = function(cx, cy, range) {
-    // scans one row of one octant
+    /**
+     * Scan one row of one octant, then recur for the next row
+     *
+     * @param {number} y what row is being scanned
+     * @param {number} start the starting slope for casting light
+     * @param {number} end the ending slope for casing light
+     * @param {Function} mx transform the x coordinate to match octant
+     * @param {Function} my transform the y coordinate to match octant
+     */
     var scan = function(y, start, end, mx, my) {
         if (start >= end) {
             return;

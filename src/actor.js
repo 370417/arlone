@@ -186,6 +186,9 @@ Actor.moveFrom = function(targetX, targetY) {
     return direction;
 };
 
+/**
+ * Attack if there is an attack direction specified
+ */
 Actor.doAttack = function() {
     if (this.attackDirection[0] === 0 && this.attackDirection[1] === 0) {
         return false;
@@ -249,6 +252,42 @@ Actor.doAttack = function() {
     }
 };
 
+/**
+ * Default action when asleep
+ *
+ * @param {string} seen - the state after seeing the player
+ */
+Actor.asleep = function(seen) {
+    if (game.level.visible[this.x][this.y]) {
+        this.state = seen;
+        Buffer.log('The ' + this.name + ' notices you.');
+    }
+    Schedule.add(this, this.delay);
+    Schedule.advance().act();
+};
+
+/**
+ * Default action when searching
+ *
+ * @param {string} found - the state after finding the player
+ * @param {string} lost - the state after losing the player
+ */
+ Actor.searching = function(found, lost) {
+     if (game.level.visible[this.x][this.y]) {
+         this.state = 'chasing';
+         Schedule.add(this, this.delay);
+         Schedule.advance().act();
+     } else {
+         var direction = this.moveTo(this.lastSeenTarget[0], this.lastSeenTarget[1]);
+         if (direction[0] === 0 && direction[1] === 0) {
+             this.state = 'asleep';
+             this.act();
+         } else {
+             this.move(direction);
+         }
+     }
+};
+
 Actor.act = function() {
     // if the monster is dead
     if (this.dead) {
@@ -263,12 +302,7 @@ Actor.act = function() {
 
     // asleep
     if (this.state === 'asleep') {
-        if (game.level.visible[this.x][this.y]) {
-            this.state = 'chasing';
-            Buffer.log('The ' + this.name + ' notices you.');
-        }
-        Schedule.add(this, this.delay);
-        Schedule.advance().act();
+        this.asleep.call(this, 'chasing');
     }
     // chasing
     else if (this.state === 'chasing') {
@@ -316,19 +350,7 @@ Actor.act = function() {
     }
     // searching
     else if (this.state === 'searching') {
-        if (game.level.visible[this.x][this.y]) {
-            this.state = 'chasing';
-            Schedule.add(this, this.delay);
-            Schedule.advance().act();
-        } else {
-            var direction = this.moveTo(this.lastSeenTarget[0], this.lastSeenTarget[1]);
-            if (direction[0] === 0 && direction[1] === 0) {
-                this.state = 'asleep';
-                this.act();
-            } else {
-                this.move(direction);
-            }
-        }
+        this.searching.call(this, 'chasing', 'asleep');
     }
 };
 
