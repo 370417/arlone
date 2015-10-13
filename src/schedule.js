@@ -20,17 +20,14 @@ var Schedule = {
 Schedule.add = function(actor, delta) {
     var prev = this;
     var next = this.next;
-    // loop through the schedule until in the correct position
     while (next && next.delta <= delta) {
         delta -= next.delta;
         prev = next;
         next = next.next;
     }
-    // update the delta of the next event
     if (next) {
         next.delta -= delta;
     }
-    // add the event
     prev.next = {
         actor: actor,
         delta: delta,
@@ -39,11 +36,7 @@ Schedule.add = function(actor, delta) {
     return prev.next;
 };
 
-/**
- * Advance to the next actor.
- *
- * @return {Actor} The next actor in the schedule
- */
+/** Advance to the next actor. */
 Schedule.advance = function() {
     if (!this.next) {
         return undefined;
@@ -53,11 +46,7 @@ Schedule.advance = function() {
     return actor;
 };
 
-/**
- * Remove all instances of actor from the schedule
- *
- * @param {Actor} actor The actor to be removed
- */
+/** Remove all instances of actor from the schedule */
 Schedule.remove = function(actor) {
     var prev = this;
     var next = this.next;
@@ -67,10 +56,9 @@ Schedule.remove = function(actor) {
             if (prev.next) {
                 prev.next.delta += next.delta;
             }
-            next = prev.next;
         } else {
             prev = prev.next;
-            next = prev.next;
         }
+        next = prev.next;
     }
 };
