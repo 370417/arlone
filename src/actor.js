@@ -9,6 +9,12 @@ var Actor = {
     lastSeenTarget: [null, null] // Where a monster last saw what it is chasing
 };
 
+var distance = function(dx, dy) {
+    var D = Math.max(Math.abs(dx), Math.abs(dy));
+    var d = Math.min(Math.abs(dx), Math.abs(dy));
+    return D + d / 2;
+};
+
 Actor.attack = function(direction) {
     if (this.name === 'player') {
         // The next line really should go in input.js
@@ -42,7 +48,7 @@ Actor.attack = function(direction) {
 
     Schedule.add(this, this.delay);
     Schedule.advance().act();
-}
+};
 
 Actor.move = function(direction) {
     if (this.name === 'player') {

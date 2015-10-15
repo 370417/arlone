@@ -335,12 +335,6 @@ Level.prototype.fov = function(cx, cy, range) {
     });
 };
 
-var distance = function(x1, y1, x2, y2) {
-    var x = Math.abs(x1 - x2);
-    var y = Math.abs(y1 - y2);
-    return Math.max(x, y) + Math.min(x, y) / 2;
-}
-
 Level.prototype.draw = function(player) {
     var w = Display.w;
     var h = Display.h;
@@ -357,7 +351,6 @@ Level.prototype.draw = function(player) {
         for (var y = 0; y < h; y++) {
             if (this.visible[x][y]) {
                 var cell;
-                var dist = distance(x, y, player.x, player.y);
                 cell = Tiles[this.map[x][y]];
                 for (var i = 0; i < this.monsters.length; i++) {
                     if (x === this.monsters[i].x && y === this.monsters[i].y) {
@@ -393,9 +386,3 @@ var passable = function(x, y) {
     }
     return passable;
 };
-
-var distance = function(dx, dy) {
-    var D = Math.max(Math.abs(dx), Math.abs(dy));
-    var d = Math.min(Math.abs(dx), Math.abs(dy));
-    return D + Math.SQRT1_2 * d;
-}
