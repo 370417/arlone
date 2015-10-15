@@ -6,11 +6,7 @@ var map = function(player, depth, prng, w, h) {
     for (var x = 0; x < w; x++) {
         map.push([]);
         for (var y = 0; y < h; y++) {
-            if (x > 0 && x < w - 1 && y > 0 && y < h - 1) {
                 map[x].push('wall');
-            } else {
-                map[x].push('outerWall');
-            }
         }
     }
 

@@ -13,12 +13,6 @@ var Tiles = {
         transparent: false,
         fg: [200, 200, 200]
     },
-    outerWall: {
-        char: '#',
-        passable: false,
-        transparent: false,
-        fg: [200, 200, 200]
-    },
     floor: {
         char: '\u00B7',
         passable: true,
