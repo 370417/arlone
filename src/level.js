@@ -346,7 +346,7 @@ Level.prototype.draw = function(player) {
     }
     this.fov(player.x, player.y, 9e9);
 
-    Display.ctx.clearRect(0, 0, w * Display.cw, h * Display.ch);
+    Display.ctx.clearRect(0, 0, w * Display.scale * Display.cw, h * Display.scale * Display.ch);
     for (var x = 0; x < w; x++) {
         for (var y = 0; y < h; y++) {
             if (this.visible[x][y]) {
@@ -357,13 +357,16 @@ Level.prototype.draw = function(player) {
                         cell = Tiles[this.monsters[i].name];
                     }
                 }
-                Display.draw(x, y, cell.char, cell.fg);
+                //Display.draw(x, y, cell.char, cell.fg);
+                Display.drawSprite(x, y, cell);
             } else if (x === player.x && y === player.y) {
                 var cell = Tiles[player.name];
-                Display.draw(x, y, cell.char, cell.fg);
+                //Display.draw(x, y, cell.char, cell.fg);
+                Display.drawSprite(x, y, cell);
             } else if (this.seen[x][y]) {
                 var cell = Tiles[this.map[x][y]];
-                Display.draw(x, y, cell.char, [cell.fg[0] / 2, cell.fg[1] / 2, cell.fg[2] / 2]);
+                //Display.draw(x, y, cell.char, [cell.fg[0] / 2, cell.fg[1] / 2, cell.fg[2] / 2]);
+                Display.drawSprite(x, y, cell);
             }
         }
     }
