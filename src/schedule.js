@@ -12,9 +12,8 @@ var Schedule = {
 
 /**
  * Add an actor to the schedule
- *
- * @param {Actor} The actor to be added
- * @param {number} delta The number of ticks before actor will act
+ * @param {Actor} actor -  The actor to be added
+ * @param {number} delta - The number of ticks before actor will act
  * @return {Object} The next event added to the schedule
  */
 Schedule.add = function(actor, delta) {
