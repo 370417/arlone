@@ -51,7 +51,11 @@ Display.draw = function(x, y, char, fg) {
     }
 };
 
-Display.drawSprite = function(x, y, tile) {
+Display.drawSprite = function(x, y, tile, hidden) {
     var sprite = Spritesheet.canvas;
     Display.ctx.drawImage(sprite, Display.cw * tile.x, Display.ch * tile.y, Display.cw, Display.ch, x * Display.scale * Display.cw, y * Display.scale * Display.ch, Display.scale * Display.cw, Display.scale * Display.ch);
+    if (hidden) {
+        Display.ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        Display.ctx.fillRect(x * Display.scale * Display.cw, y * Display.scale * Display.ch, Display.scale * Display.cw, Display.scale * Display.ch);
+    }
 }

@@ -15,15 +15,15 @@ var Tiles = {
         transparent: false,
         fg: [200, 200, 200],
         x: 0,
-        y: 0
+        y: 4
     },
     floor: {
         char: '\u00B7',
         passable: true,
         transparent: true,
         fg: [185, 185, 185],
-        x: 300,
-        y: 300
+        x: 1,
+        y: 4
     },
     door: {
         char: '+',

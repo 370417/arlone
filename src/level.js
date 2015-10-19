@@ -366,7 +366,7 @@ Level.prototype.draw = function(player) {
             } else if (this.seen[x][y]) {
                 var cell = Tiles[this.map[x][y]];
                 //Display.draw(x, y, cell.char, [cell.fg[0] / 2, cell.fg[1] / 2, cell.fg[2] / 2]);
-                Display.drawSprite(x, y, cell);
+                Display.drawSprite(x, y, cell, true);
             }
         }
     }
