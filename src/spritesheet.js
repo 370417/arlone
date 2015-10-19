@@ -15,9 +15,9 @@ Spritesheet.onload = function(e) {
     Spritesheet.ctx = ctx;
 };
 
-Spritesheet.load = function() {
+Spritesheet.load = function(callback) {
     var img = new Image(Spritesheet.sw, Spritesheet.sh);
     img.addEventListener('load', Spritesheet.onload, false);
     img.src = 'res/spritesheet.png';
+    callback.call();
 };
-Spritesheet.load();

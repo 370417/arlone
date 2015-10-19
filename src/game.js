@@ -61,7 +61,11 @@ document.body.addEventListener('keyup', input.keyUp, false);
 var font = new Font();
 
 font.onload = function() {
-    game = new Game();
+    alert('Font loaded!');
+    Spritesheet.load(function() {
+        alert('Images loaded!');
+        game = new Game();
+    });
 };
 
 font.onerror = function(err) {
