@@ -56,3 +56,13 @@ body {
     text-align: center;
     width: 14px;
 }
+
+#tooltip {
+    background: rgba(0, 0, 0, 0.75);
+    color: #FFF;
+    position: absolute;
+    width: 116px;
+    top: 0;
+    left: 0;
+    transition: height 0.2s, padding 0.2s, width 0.2s;
+}

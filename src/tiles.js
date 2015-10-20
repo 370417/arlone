@@ -51,12 +51,14 @@ var Tiles = {
         char: 'D',
         fg: [200, 200, 255],
         x: 3,
-        y: 0
+        y: 0,
+        desc: 'A dragon.'
     },
     rat: {
         char: 'R',
         fg: [255, 200, 200],
         x: 1,
-        y: 2
+        y: 2,
+        desc: 'A rat'
     }
 };
