@@ -57,19 +57,34 @@ var Game = function(seed) {
 document.body.addEventListener('keydown', input.keyDown, false);
 document.body.addEventListener('keyup', input.keyUp, false);
 
+/**
+ * Creates functions that increment a private variable when called.
+ * This is used to start the game once all assets have been loaded.
+ */
+var Loader = function(name) {
+    var assets = 0;
+    var totalAssets = 2;
+    console.log('Loading ' + name);
+    return function() {
+        assets++;
+        console.log('Loaded ' + name);
+        if (assets == totalAssets) {
+            game = new Game();
+        }
+    };
+};
+
 // load the font
 var font = new Font();
 
 font.onload = function() {
-    alert('Font loaded!');
     Spritesheet.load(function() {
-        alert('Images loaded!');
         game = new Game();
     });
 };
 
 font.onerror = function(err) {
-    alert(err.name + ': ' + err.message);
+    alert('There was an error loading the font.');
     if (confirm('Start game with system font?')) {
         alert('Not yet implemented');
     }
