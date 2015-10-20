@@ -111,6 +111,8 @@ Display.canvas.addEventListener('mousemove', function(e) {
 
             var tile = game.level.map[x][y];
             Display.tooltip.innerHTML += tile;
+        } else if (x === game.player.x && y === game.player.y) {
+            Display.tooltip.innerHTML += 'You!';
         }
 
         Display.tooltip.style.width = '100px';
