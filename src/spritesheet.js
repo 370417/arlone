@@ -3,7 +3,7 @@ var Spritesheet =  {
     sh: 360
 };
 
-Spritesheet.onload = function(e) {
+Spritesheet.onload = function(callback) {
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
     ctx.drawImage(this, 0, 0);

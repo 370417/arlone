@@ -61,27 +61,27 @@ document.body.addEventListener('keyup', input.keyUp, false);
  * Creates functions that increment a private variable when called.
  * This is used to start the game once all assets have been loaded.
  */
-var Loader = function(name) {
+var loader = (function() {
     var assets = 0;
     var totalAssets = 2;
-    console.log('Loading ' + name);
-    return function() {
+    return function(name) {
         assets++;
-        console.log('Loaded ' + name);
         if (assets == totalAssets) {
-            game = new Game();
+            try {
+                game = new Game();
+            } catch (e) {
+                console.log(e);
+            }
         }
-    };
-};
+    }
+})();
 
 // load the font
 var font = new Font();
 
-font.onload = function() {
-    Spritesheet.load(function() {
-        game = new Game();
-    });
-};
+font.onload = loader;
+
+Spritesheet.load(loader);
 
 font.onerror = function(err) {
     alert('There was an error loading the font.');
