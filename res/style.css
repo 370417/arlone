@@ -61,8 +61,17 @@ body {
     background: rgba(0, 0, 0, 0.75);
     color: #FFF;
     position: absolute;
-    width: 116px;
+    overflow-y: hidden;
+    width: 100px;
+    padding: 0 8px;
     top: 0;
     left: 0;
-    transition: height 0.2s, padding 0.2s, width 0.2s;
+    border: 0 solid rgba(255, 255, 255, 0.5);
+    transition: height 0.2s, padding 0.2s, border 0.2s;
+}
+
+.monster-desc {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
 }

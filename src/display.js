@@ -72,8 +72,9 @@ Display.drawSprite = function(x, y, tile, hidden) {
 Display.minimize = function() {
     Display.tooltip.innerHTML = '';
     Display.tooltip.style.height = '0';
-    Display.tooltip.style.width = '116px';
-    Display.tooltip.style.padding = '0';
+    Display.tooltip.style.width = '100px';
+    Display.tooltip.style.padding = '0 8px';
+    Display.tooltip.style.border = '0 solid rgba(255, 255, 255, 0)';
 };
 
 /** Measures the height of the tooltip using an invisible clone of it */
@@ -105,7 +106,7 @@ Display.canvas.addEventListener('mousemove', function(e) {
             for (var i = 0; i < game.level.monsters.length; i++) {
                 var monster = game.level.monsters[i];
                 if (x === monster.x && y === monster.y) {
-                    Display.tooltip.innerHTML += Tiles[monster.name].desc + '<br>';
+                    Display.tooltip.innerHTML += Tiles[monster.name].desc;
                 }
             }
 
@@ -118,6 +119,8 @@ Display.canvas.addEventListener('mousemove', function(e) {
         Display.tooltip.style.width = '100px';
         Display.tooltip.style.height = Display.toolHeight(Display.tooltip.innerHTML) + 'px';
         Display.tooltip.style.padding = '8px';
+        Display.tooltip.style.border = '1px solid rgba(255, 255, 255, 0.5)';
+
         if (Display.tooltip.innerHTML.length === 0) {
             Display.minimize();
         }

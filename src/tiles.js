@@ -30,8 +30,8 @@ var Tiles = {
         passable: false,
         transparent: false,
         fg: [222, 111, 55],
-        x: 1,
-        y: 0
+        x: 2,
+        y: 4
     },
     openDoor: {
         char: '\u2212',
@@ -39,7 +39,7 @@ var Tiles = {
         transparent: true,
         fg: [222, 111, 55],
         x: 3,
-        y: 1
+        y: 4
     },
     player: {
         char: '@',
@@ -52,13 +52,13 @@ var Tiles = {
         fg: [200, 200, 255],
         x: 3,
         y: 0,
-        desc: 'A dragon.'
+        desc: '<div class="monster-desc">A dragon.</div>'
     },
     rat: {
         char: 'R',
         fg: [255, 200, 200],
-        x: 1,
+        x: 2,
         y: 2,
-        desc: 'A rat'
+        desc: '<div class="monster-desc">A rat</div>'
     }
 };
