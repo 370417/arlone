@@ -74,7 +74,7 @@ Display.drawSprite = function(x, y, tile, hidden) {
 Display.minimize = function() {
     Display.tooltip.innerHTML = '';
     Display.tooltip.style.height = '0';
-    Display.tooltip.style.width = '100px';
+    Display.tooltip.style.width = '200px';
     Display.tooltip.style.padding = '0 8px';
     Display.tooltip.style.border = '0 solid rgba(255, 255, 255, 0)';
 };
@@ -83,8 +83,8 @@ Display.minimize = function() {
 Display.toolHeight = (function() {
     var invisible = document.createElement('div');
     invisible.style.position = 'absolute';
-    invisible.style.left = '-100px';
-    invisible.style.width = '100px';
+    invisible.style.left = '-200px';
+    invisible.style.width = '200px';
     document.body.appendChild(invisible);
     return function(text) {
         invisible.innerHTML = text;
@@ -112,13 +112,13 @@ Display.canvas.addEventListener('mousemove', function(e) {
                 }
             }
 
-            var tile = game.level.map[x][y];
-            Display.tooltip.innerHTML += tile;
+            var tile = Tiles[game.level.map[x][y]];
+            Display.tooltip.innerHTML += tile.desc;
         } else if (x === game.player.x && y === game.player.y) {
-            Display.tooltip.innerHTML += 'You!';
+            Display.tooltip.innerHTML += Tiles['player'].desc;
         }
 
-        Display.tooltip.style.width = '100px';
+        Display.tooltip.style.width = '200px';
         Display.tooltip.style.height = Display.toolHeight(Display.tooltip.innerHTML) + 'px';
         Display.tooltip.style.padding = '8px';
         Display.tooltip.style.border = '1px solid rgba(255, 255, 255, 0.5)';
