@@ -65,6 +65,18 @@ input.keyCode = {
 input.keyDown = function(e) {
     var key = input.keyCode[e.keyCode] || e.key || 'Unknown';
     var player = window.game.player;
+    if (input.mode === 'help') {
+        document.getElementById('help').style.display = 'none';
+        document.getElementById('Help-button').style.color = '';
+        input.mode = 'playing';
+    } else {
+        if (key === '/' || key === '?') {
+            document.getElementById('help').style.display = 'block';
+            document.getElementById('Help-button').style.color = '#F00';
+            document.getElementById('Z').style.color = '';
+            input.mode = 'help';
+        }
+    }
     if (input.mode === 'playing') {
         if (key === 'b' || key === '1') {
             player.move([-1, 1]);
@@ -146,15 +158,9 @@ input.keyDown = function(e) {
                 input.movedDiagonally = true;
             }
         }
-
         else if (key === 'z') {
-            document.getElementById('Z').setAttribute('style', 'color: #F00');
+            document.getElementById('Z').style.color = '#F00';
             input.mode = 'attacking';
-        }
-
-        else if (key === '/' || key === '?') {
-            document.getElementById('help').setAttribute('style', 'display: block');
-            input.mode = 'help';
         }
     } else if (input.mode === 'attacking') {
         if (key === 'b' || key === '1') {
@@ -235,12 +241,9 @@ input.keyDown = function(e) {
             }
         }
         else {
-            document.getElementById('Z').removeAttribute('style');
+            document.getElementById('Z').style.color = '';
             input.mode = 'playing';
         }
-    } else if (input.mode === 'help') {
-        document.getElementById('help').removeAttribute('style');
-        input.mode = 'playing';
     }
 };
 
@@ -309,3 +312,48 @@ input.keyUp = function(e) {
         }
     }
 };
+
+// click on Attack button
+document.getElementById('Z').addEventListener('click', function() {
+    if (input.mode === 'attacking') {
+        document.getElementById('Z').style.color = '';
+        input.mode = 'playing';
+    } else {
+        document.getElementById('X').style.color = '';
+        document.getElementById('Help-button').style.color = '';
+        document.getElementById('help').style.display = 'none';
+        document.getElementById('Z').style.color = '#F00';
+        input.mode = 'attacking';
+    }
+}, false);
+
+// click on Help button
+document.getElementById('Help-button').addEventListener('click', function() {
+    if (input.mode === 'help') {
+        document.getElementById('Help-button').style.color = '';
+        document.getElementById('help').style.display = 'none';
+        input.mode = 'playing';
+    } else {
+        document.getElementById('Z').style.color = '';
+        document.getElementById('X').style.color = '';
+        document.getElementById('Help-button').style.color = '#F00';
+        document.getElementById('help').style.display = 'block';
+        input.mode = 'help';
+    }
+}, false);
+
+// click on ASCII button
+document.getElementById('ascii-button').addEventListener('click', function() {
+    document.getElementById('ascii-button').style.display = 'none';
+    document.getElementById('tiles-button').style.display = 'inline-block';
+    Display.useTiles = false;
+    game.level.draw(game.player);
+}, false);
+
+// click on Tiles button
+document.getElementById('tiles-button').addEventListener('click', function() {
+    document.getElementById('tiles-button').style.display = 'none';
+    document.getElementById('ascii-button').style.display = 'inline-block';
+    Display.useTiles = true;
+    game.level.draw(game.player);
+}, false);

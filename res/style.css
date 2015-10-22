@@ -38,6 +38,7 @@ body {
 #bottom .button {
     display: inline-block;
     padding: 8px 24px 8px 0;
+    cursor: pointer;
 }
 
 #help {
@@ -74,4 +75,15 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     padding-bottom: 8px;
     margin-bottom: 8px;
+}
+
+#hoplite {
+    display: inline-block;
+    background: url('spritesheet.png') 0 -48px;
+    width: 16px;
+    color: transparent;
+}
+
+#bottom #tiles-button {
+    display: none;
 }

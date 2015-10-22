@@ -14,7 +14,9 @@ var Display = {
     // cell height
     ch: 16,
     // size of each pixel
-    scale: 1
+    scale: 1,
+    // whether or not to use tiles
+    useTiles: true
 };
 
 // Setup canvas & context

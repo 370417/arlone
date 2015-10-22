@@ -357,16 +357,25 @@ Level.prototype.draw = function(player) {
                         cell = Tiles[this.monsters[i].name];
                     }
                 }
-                //Display.draw(x, y, cell.char, cell.fg);
-                Display.drawSprite(x, y, cell);
+                if (Display.useTiles) {
+                    Display.drawSprite(x, y, cell);
+                } else {
+                    Display.draw(x, y, cell.char, cell.fg);
+                }
             } else if (x === player.x && y === player.y) {
                 var cell = Tiles[player.name];
-                //Display.draw(x, y, cell.char, cell.fg);
-                Display.drawSprite(x, y, cell);
+                if (Display.useTiles) {
+                    Display.drawSprite(x, y, cell);
+                } else {
+                    Display.draw(x, y, cell.char, cell.fg);
+                }
             } else if (this.seen[x][y]) {
                 var cell = Tiles[this.map[x][y]];
-                //Display.draw(x, y, cell.char, [cell.fg[0] / 2, cell.fg[1] / 2, cell.fg[2] / 2]);
-                Display.drawSprite(x, y, cell, true);
+                if (Display.useTiles) {
+                    Display.drawSprite(x, y, cell, true);
+                } else {
+                    Display.draw(x, y, cell.char, [cell.fg[0] / 2, cell.fg[1] / 2, cell.fg[2] / 2]);
+                }
             }
         }
     }
