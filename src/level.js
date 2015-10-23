@@ -254,44 +254,50 @@ var Level = function(player, depth, seed) {
  */
 Level.prototype.fov = function(cx, cy, range) {
     /**
-     * Scan one row of one octant, then recur for the next row
-     *
-     * @param {number} y what row is being scanned
-     * @param {number} start the starting slope for casting light
-     * @param {number} end the ending slope for casing light
-     * @param {Function} mx transform the x coordinate to match octant
-     * @param {Function} my transform the y coordinate to match octant
+     * Reveal and remember a tile
+     * @param {Level} level - the level that the tile is on
+     * @param {number} x - the x coordinate of the tile
+     * @param {number} y - the y coordinate of the tile
+     */
+    var reveal = function(level, x, y) {
+        level.visible[x][y] = true;
+        level.seen[x][y] = true;
+    };
+    /**
+     * Scan one row of one octant
+     * This is the octant version of recurive shadowcasting
+     * @param {number} y - the distance from the scan row to the player
+     * @param {number} start - the starting slope
+     * @param {number} end - the ending slope
+     * @param {Function} mx - function that returns the actual x coordinate
+     * @param {Function} my - function that returns the actual y coordinate
      */
     var scan = function(y, start, end, mx, my) {
         if (start >= end) {
             return;
         }
-        var startX = Math.round(y * start);
-        var endX = Math.round(y * end);
-        var currX = mx(startX, y);
-        var currY = my(startX, y);
-        var prevX = currX;
-        var prevY = currY;
-        this.visible[currX][currY] = true;
-        this.seen[currX][currY] = true;
-        for (var x = startX + 1; x <= endX; x++) {
-            currX = mx(x, y);
-            currY = my(x, y);
-            this.visible[currX][currY] = true;
-            this.seen[currX][currY] = true;
-            var currTransparent = Tiles[this.map[currX][currY]].transparent;
-            var prevTransparent = Tiles[this.map[prevX][prevY]].transparent;
-            if (currTransparent && !prevTransparent) {
-                start = (x - 0.5) / (y - 0.5);
-            } else if (!currTransparent && prevTransparent) {
-                scan.call(this, y + 1, start, (x - 0.5) / (y + 0.5), mx, my);
+        var startx = Math.round((y - 0.5) * start);
+        var endx = Math.ceil((y + 0.5) * end - 0.5);
+        for (var x = startx; x <= endx; x++) {
+            var realx = mx(x, y);
+            var realy = my(x, y);
+            var transparent = Tiles[this.map[realx][realy]].transparent;
+            if (transparent) {
+                if (start >= end) {
+                    return;
+                }
+                if (x >= y * start && x <= y * end) {
+                    reveal(this, realx, realy);
+                }
+            } else {
+                if (x >= (y - 0.5) * start) {
+                    reveal(this, realx, realy);
+                }
+                scan.call(this, y + 1, start, (x - 0.5) / (y + 0.5), mx, my, 'wall');
+                start = (x + 0.5) / (y - 0.5);
             }
-            prevX = currX;
-            prevY = currY;
         }
-        if (Tiles[this.map[mx(endX,y)][my(endX,y)]].transparent) {
-            scan.call(this, y + 1, start, end, mx, my);
-        }
+        scan.call(this, y + 1, start, end, mx, my, 'endscan');
     };
     scan.call(this, 1, 0, 1, function(x, y) {
         return cx + x;

@@ -103,15 +103,14 @@ Display.canvas.addEventListener('mousemove', function(e) {
         Display.tooltip.innerHTML = '';
 
         if (game.level.visible[x][y]) {
-            //Display.tooltip.innerHTML = x + ', ' + y;
-
             for (var i = 0; i < game.level.monsters.length; i++) {
                 var monster = game.level.monsters[i];
                 if (x === monster.x && y === monster.y) {
                     Display.tooltip.innerHTML += Tiles[monster.name].desc;
                 }
             }
-
+        }
+        if (game.level.seen[x][y]) {
             var tile = Tiles[game.level.map[x][y]];
             Display.tooltip.innerHTML += tile.desc;
         } else if (x === game.player.x && y === game.player.y) {
