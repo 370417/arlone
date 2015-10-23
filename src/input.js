@@ -318,7 +318,7 @@ document.getElementById('Z').addEventListener('click', function() {
     if (input.mode === 'attacking') {
         document.getElementById('Z').style.color = '';
         input.mode = 'playing';
-    } else {
+    } else if (!game.player.dead) {
         document.getElementById('X').style.color = '';
         document.getElementById('Help-button').style.color = '';
         document.getElementById('help').style.display = 'none';

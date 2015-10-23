@@ -113,7 +113,8 @@ Display.canvas.addEventListener('mousemove', function(e) {
         if (game.level.seen[x][y]) {
             var tile = Tiles[game.level.map[x][y]];
             Display.tooltip.innerHTML += tile.desc;
-        } else if (x === game.player.x && y === game.player.y) {
+        }
+        if (x === game.player.x && y === game.player.y) {
             Display.tooltip.innerHTML += Tiles['player'].desc;
         }
 

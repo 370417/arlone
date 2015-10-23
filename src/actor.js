@@ -18,7 +18,7 @@ var distance = function(dx, dy) {
 Actor.attack = function(direction) {
     if (this.name === 'player') {
         // The next line really should go in input.js
-        document.getElementById('Z').removeAttribute('style');
+        document.getElementById('Z').style.color = '';
         input.mode = 'animating';
     }
     this.attackType = 'feint';
@@ -216,6 +216,8 @@ Actor.doAttack = function() {
         if (targetX === game.player.x && targetY === game.player.y) {
             this.attackType = 'kill';
             Buffer.log('The ' + this.name + ' kills you. You die . . .');
+            game.player.dead = true;
+            game.level.draw(game.player);
             return true;
         }
 

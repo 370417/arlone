@@ -247,10 +247,9 @@ var Level = function(player, depth, seed) {
 
 /**
  * Run a recursive shadowcasting fov algorithm and update visibility of tiles
- *
- * @param {number} cx x coordinate of center of fov
- * @param {number} cy y coordinate of center of fov
- * @param {number} range range of fov
+ * @param {number} cx - x coordinate of center of fov
+ * @param {number} cy - y coordinate of center of fov
+ * @param {number} range - range of fov
  */
 Level.prototype.fov = function(cx, cy, range) {
     /**
