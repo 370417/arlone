@@ -2,7 +2,9 @@ var Actor = {
     name: '',
     delay: 1, // How much time passes after a move
     dead: false,
-    attackDirection: [0, 0], // A planned attack's position relative to the attacker
+    // A planned attack's position relative to the attacker
+    attackDirectionX: 0,
+    attackDirectionY: 0,
     attackTarget: undefined, // A planned attack's initial target
     attackType: 'feint',
     state: 'asleep',
@@ -15,7 +17,7 @@ var distance = function(dx, dy) {
     return D + d / 2;
 };
 
-Actor.attack = function(direction) {
+Actor.attack = function(x, y) {
     if (this.name === 'player') {
         // The next line really should go in input.js
         document.getElementById('Z').style.color = '';
@@ -25,12 +27,13 @@ Actor.attack = function(direction) {
     if (this.name === 'player') {
         this.attackType = 'playerfeint';
     }
-    this.attackDirection = direction;
-    var targetX = this.x + this.attackDirection[0];
-    var targetY = this.y + this.attackDirection[1];
+    this.attackDirectionX = x;
+    this.attackDirectionY = y;
+    var targetX = this.x + x;
+    var targetY = this.y + y;
     for (var i = 0; i < game.level.monsters.length; i++) {
         var monster = game.level.monsters[i];
-        if (monster.attackDirection[0] || monster.attackDirection[1]) {
+        if (monster.attackDirectionX || monster.attackDirectionY) {
 
         }
         if (targetX === monster.x && targetY === monster.y) {
@@ -50,20 +53,20 @@ Actor.attack = function(direction) {
     Schedule.advance().act();
 };
 
-Actor.move = function(direction) {
+Actor.move = function(x, y) {
     if (this.name === 'player') {
         input.mode = 'animating';
     }
 
-    if (direction[0] === 0 && direction[1] === 0) {
+    if (x === 0 && y === 0) {
         Schedule.add(this, this.delay);
         Schedule.advance().act();
         return;
     }
 
     var destination = {
-        x: this.x + direction[0],
-        y: this.y + direction[1]
+        x: this.x + x,
+        y: this.y + y
     };
     destination.name = window.game.level.map[destination.x][destination.y];
     destination.info = Tiles[destination.name];
@@ -196,11 +199,11 @@ Actor.moveFrom = function(targetX, targetY) {
  * Attack if there is an attack direction specified
  */
 Actor.doAttack = function() {
-    if (this.attackDirection[0] === 0 && this.attackDirection[1] === 0) {
+    if (this.attackDirectionX === 0 && this.attackDirectionY === 0) {
         return false;
     } else {
-        var targetX = this.x + this.attackDirection[0];
-        var targetY = this.y + this.attackDirection[1];
+        var targetX = this.x + this.attackDirectionX;
+        var targetY = this.y + this.attackDirectionY;
         game.level.attacks.push([targetX, targetY]);
         for (var i = 0; i < game.level.monsters.length; i++) {
             var monster = game.level.monsters[i];
@@ -244,7 +247,8 @@ Actor.doAttack = function() {
             Buffer.log('You kill the ' + this.attackTarget.name + '.');
         }
 
-        this.attackDirection = [0, 0];
+        this.attackDirectionX = 0;
+        this.attackDirectionY = 0;
         this.attackTarget = undefined;
         if (this.name === 'player') {
             game.level.draw(this);
@@ -288,11 +292,13 @@ Actor.asleep = function(seen) {
          Schedule.advance().act();
      } else {
          var direction = this.moveTo(this.lastSeenTarget[0], this.lastSeenTarget[1]);
-         if (direction[0] === 0 && direction[1] === 0) {
+         var dx = direction[0];
+         var dy = direction[1];
+         if (dx === 0 && dy === 0) {
              this.state = 'asleep';
              this.act();
          } else {
-             this.move(direction);
+             this.move(dx, dy);
          }
      }
 };
@@ -334,22 +340,26 @@ Actor.act = function() {
             }
             if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) > 2) {
                 var direction = this.moveTo(player.x, player.y);
-                if (direction[0] === 0 && direction[1] === 0) {
+                var dx = direction[0];
+                var dy = direction[1];
+                if (dx === 0 && dy === 0) {
                     this.state = 'searching';
                     this.act();
                 } else {
-                    this.move(direction);
+                    this.move(dx, dy);
                 }
             }
             else if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) === 2) {
-                this.attack([x, y]);
+                this.attack(x, y);
             }
             else if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) === 1) {
                 var direction = this.moveFrom(player.x, player.y);
-                if (direction[0] === 0 && direction[1] === 0) {
-                    this.attack([x, y]);
+                var dx = direction[0];
+                var dy = direction[1];
+                if (dx === 0 && dy === 0) {
+                    this.attack(x, y);
                 } else {
-                    this.move(direction);
+                    this.move(dx, dy);
                 }
             }
         } else {
@@ -425,23 +435,27 @@ Actors.coward.act = function() {
             }
             if (afraid) {
                 var direction = this.moveFrom(player.x, player.y);
-                if (direction[0] === 0 && direction[1] === 0) {
-                    this.attack([x, y]);
+                var dx = direction[0];
+                var dy = direction[1];
+                if (dx === 0 && dy === 0) {
+                    this.attack(x, y);
                 } else {
-                    this.move(direction);
+                    this.move(dx, dy);
                 }
             }
             else if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) > 1) {
                 var direction = this.moveTo(player.x, player.y);
-                if (direction[0] === 0 && direction[1] === 0) {
+                var dx = direction[0];
+                var dy = direction[1];
+                if (dx === 0 && dy === 0) {
                     this.state = 'searching';
                     this.act();
                 } else {
-                    this.move(direction);
+                    this.move(dx, dy);
                 }
             }
             else if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) === 1) {
-                this.attack([x, y]);
+                this.attack(x, y);
             }
         } else {
             this.state = 'searching';
@@ -456,11 +470,13 @@ Actors.coward.act = function() {
             Schedule.advance().act();
         } else {
             var direction = this.moveTo(this.lastSeenTarget[0], this.lastSeenTarget[1]);
-            if (direction[0] === 0 && direction[1] === 0) {
+            var dx = direction[0];
+            var dy = direction[1];
+            if (dx === 0 && dy === 0) {
                 this.state = 'asleep';
                 this.act();
             } else {
-                this.move(direction);
+                this.move(dx, dy);
             }
         }
     }
