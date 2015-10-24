@@ -69,8 +69,9 @@ input.keyDown = function(e) {try{
     /**
      * Call a callback based on what directional key the player pressed.
      * The callback must have arguments x and y that specify direction.
+     * @return {boolean} - whether or not a direction key was pressed
      */
-    var directionalPressed = function(key, callback) {
+    var directionPressed = function(key, callback) {
         if (key === 'b' || key === '1') {
             callback.call(game.player, -1, 1);
         }
@@ -151,6 +152,10 @@ input.keyDown = function(e) {try{
                 input.movedDiagonally = true;
             }
         }
+        else {
+            return false;
+        }
+        return true;
     };
 
     if (input.mode === 'help') {
@@ -166,14 +171,13 @@ input.keyDown = function(e) {try{
         }
     }
     if (input.mode === 'playing') {
-        directionalPressed(key, player.move);
+        directionPressed(key, player.move);
         if (key === 'z') {
             document.getElementById('Z').style.color = '#F00';
             input.mode = 'attacking';
         }
     } else if (input.mode === 'attacking') {
-        directionalPressed(key, player.attack);
-        {
+        if (!directionPressed(key, player.attack)) {
             document.getElementById('Z').style.color = '';
             input.mode = 'playing';
         }
@@ -182,67 +186,43 @@ input.keyDown = function(e) {try{
 
 input.keyUp = function(e) {
     var key = input.keyCode[e.keyCode] || e.key || 'Unknown';
-
     var player = window.game.player;
 
+    var directionReleased = function(key, callback) {
+        if (input.pressed === 'up' && (key === 'Up' || key === 'ArrowUp' || key === 'w')) {
+            input.pressed = '';
+            if (!input.movedDiagonally) {
+                callback.call(game.player, 0, -1);
+            }
+            input.movedDiagonally = false;
+        }
+        if (input.pressed === 'left' && (key === 'Left' || key === 'ArrowLeft' || key === 'a')) {
+            input.pressed = '';
+            if (!input.movedDiagonally) {
+                callback.call(game.player, -1, 0);
+            }
+            input.movedDiagonally = false;
+        }
+        if (input.pressed === 'down' && (key === 'Down' || key === 'ArrowDown' || key === 's')) {
+            input.pressed = '';
+            if (!input.movedDiagonally) {
+                callback.call(game.player, 0, 1);
+            }
+            input.movedDiagonally = false;
+        }
+        if (input.pressed === 'right' && (key === 'Right' || key === 'ArrowRight' || key === 'd')) {
+            input.pressed = '';
+            if (!input.movedDiagonally) {
+                callback.call(game.player, 1, 0);
+            }
+            input.movedDiagonally = false;
+        }
+    };
+
     if (input.mode === 'playing') {
-        if (input.pressed === 'up' && (key === 'Up' || key === 'ArrowUp' || key === 'w')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.move([0, -1]);
-            }
-            input.movedDiagonally = false;
-        }
-        if (input.pressed === 'left' && (key === 'Left' || key === 'ArrowLeft' || key === 'a')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.move([-1, 0]);
-            }
-            input.movedDiagonally = false;
-        }
-        if (input.pressed === 'down' && (key === 'Down' || key === 'ArrowDown' || key === 's')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.move([0, 1]);
-            }
-            input.movedDiagonally = false;
-        }
-        if (input.pressed === 'right' && (key === 'Right' || key === 'ArrowRight' || key === 'd')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.move([1, 0]);
-            }
-            input.movedDiagonally = false;
-        }
+        directionReleased(key, player.move);
     } else if (input.mode === 'attacking') {
-        if (input.pressed === 'up' && (key === 'Up' || key === 'ArrowUp' || key === 'w')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.attack([0, -1]);
-            }
-            input.movedDiagonally = false;
-        }
-        if (input.pressed === 'left' && (key === 'Left' || key === 'ArrowLeft' || key === 'a')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.attack([-1, 0]);
-            }
-            input.movedDiagonally = false;
-        }
-        if (input.pressed === 'down' && (key === 'Down' || key === 'ArrowDown' || key === 's')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.attack([0, 1]);
-            }
-            input.movedDiagonally = false;
-        }
-        if (input.pressed === 'right' && (key === 'Right' || key === 'ArrowRight' || key === 'd')) {
-            input.pressed = '';
-            if (!input.movedDiagonally) {
-                player.attack([1, 0]);
-            }
-            input.movedDiagonally = false;
-        }
+        directionReleased(key, player.attack);
     }
 };
 
