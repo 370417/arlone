@@ -201,6 +201,7 @@ Actor.doAttack = function() {
     } else {
         var targetX = this.x + this.attackDirection[0];
         var targetY = this.y + this.attackDirection[1];
+        game.level.attacks.push([targetX, targetY]);
         for (var i = 0; i < game.level.monsters.length; i++) {
             var monster = game.level.monsters[i];
             if (targetX === monster.x && targetY === monster.y) {

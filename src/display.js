@@ -134,3 +134,30 @@ Display.canvas.addEventListener('mousemove', function(e) {
 Display.canvas.addEventListener('mouseout', function() {
     Display.minimize();
 }, false);
+
+Display.attack = function(x, y, tiles) {
+    if (tiles) {
+        var className = 'attackTiles';
+        var delay = 100;
+        var content = '';
+    } else {
+        var className = 'attack';
+        var delay = 600;
+        var content = 'X';
+    }
+    var element = document.createElement('div');
+    element.addEventListener('transitionend', function() {
+        element.parentNode.removeChild(element);
+    }, false);
+    element.innerHTML = content;
+    element.setAttribute('class', className);
+    element.style.top = Display.canvas.offsetTop + Display.ch * Display.scale * y + 'px';
+    element.style.left = Display.cw * Display.scale * x + 'px';
+    element.style.width = Display.cw + 'px';
+    element.style.height = Display.ch + 'px';
+    document.getElementById('game').appendChild(element);
+    element.style.opacity = '1';
+    setTimeout(function() {
+        element.style.opacity = '0';
+    }, delay);
+};

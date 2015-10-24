@@ -87,3 +87,16 @@ body {
 #bottom #tiles-button {
     display: none;
 }
+
+.attack, .attackTiles {
+    background: #000;
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 0s;
+    text-align: center;
+}
+
+.attackTiles {
+    background: transparent url('spritesheet.png') -16px -48px;
+    transition: opacity 1s;
+}

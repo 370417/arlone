@@ -242,6 +242,7 @@ var Level = function(player, depth, seed) {
     this.seen = fillArr(false, this.w, this.h);
     this.visible = fillArr(false, this.w, this.h);
     this.monsters = [];
+    this.attacks = [];
     this.map = map.call(this, player, depth, this.prng, this.w, this.h);
 };
 
@@ -355,6 +356,15 @@ Level.prototype.draw = function(player) {
     for (var x = 0; x < w; x++) {
         for (var y = 0; y < h; y++) {
             if (this.visible[x][y]) {
+                for (var i = 0; i < this.attacks.length; i++) {
+                    if (x === this.attacks[i][0] && y === this.attacks[i][1]) {
+                        if (Display.useTiles) {
+                            Display.attack(x, y, true);
+                        } else {
+                            Display.attack(x, y, false);
+                        }
+                    }
+                }
                 var cell;
                 cell = Tiles[this.map[x][y]];
                 for (var i = 0; i < this.monsters.length; i++) {
@@ -384,6 +394,7 @@ Level.prototype.draw = function(player) {
             }
         }
     }
+    this.attacks = [];
 };
 
 var passable = function(x, y) {

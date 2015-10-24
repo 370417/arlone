@@ -45,6 +45,12 @@ var Tiles = {
         y: 4,
         desc: 'An open door<br>You can close it by walking through it.'
     },
+    attack: {
+        char: 'X',
+        fg: [255, 0, 0],
+        x: 1,
+        y: 3
+    },
     player: {
         char: '@',
         fg: [255, 255, 255],
