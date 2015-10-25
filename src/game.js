@@ -39,16 +39,17 @@ var Game = function(seed) {
     }
 
     this.player.act = function() {
-        // resolve player attacks
-        if (!this.doAttack()) {
-            level.draw(this);
-            // check win condition
-            if (!game.level.monsters.length) {
-                Buffer.log('A winner is you!');
-                return;
-            }
-            input.mode = 'playing';
+        if (this.doAttack()) {
+            return;
         }
+        //this.doLunge();
+        level.draw(this);
+        // check win condition
+        if (!game.level.monsters.length) {
+            Buffer.log('A winner is you!');
+            return;
+        }
+        input.mode = 'playing';
     };
 
     Schedule.advance().act();

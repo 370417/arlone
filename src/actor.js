@@ -7,6 +7,10 @@ var Actor = {
     attackDirectionY: 0,
     attackTarget: undefined, // A planned attack's initial target
     attackType: 'feint',
+    lungeDirectionX: 0,
+    lungeDirectionY: 0,
+    lungeTarget: undefined,
+    lungeType: 'feint',
     state: 'asleep',
     lastSeenTarget: [null, null] // Where a monster last saw what it is chasing
 };
@@ -48,6 +52,25 @@ Actor.attack = function(x, y) {
             this.attackTarget = game.player;
         }
     }
+
+    Schedule.add(this, this.delay);
+    Schedule.advance().act();
+};
+
+Actor.lunge = function(x, y) {
+    if (this.name === 'player') {
+        document.getElementById('X').style.color = '';
+        input.mode = 'animating';
+    }
+    this.lungeType = 'feint';
+    if (this.name == 'player') {
+        this.lungeType = 'playerfeint';
+    }
+    this.lungeDirectionX = x;
+    this.lungeDirectionY = y;
+    var targetX = this.x + 2 * x;
+    var targetY = this.y + 2 * y;
+    // stuff to determine lungeType
 
     Schedule.add(this, this.delay);
     Schedule.advance().act();
@@ -263,6 +286,15 @@ Actor.doAttack = function() {
         }
         return true;
     }
+};
+
+Actor.doLunge = function() {
+    if (this.LungeDirectionX === 0 && this.LungeDirectionY === 0) {
+        return;
+    }
+    var targetX = this.x + 2 * this.lungeDirectionX;
+    var targetY = this.y + 2 * this.lungeDirectionY;
+    game.level.attacks.push([targetX, targetY]);
 };
 
 /**

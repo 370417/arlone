@@ -167,6 +167,7 @@ input.keyDown = function(e) {try{
             document.getElementById('help').style.display = 'block';
             document.getElementById('Help-button').style.color = '#F00';
             document.getElementById('Z').style.color = '';
+            document.getElementById('X').style.color = '';
             input.mode = 'help';
         }
     }
@@ -176,10 +177,29 @@ input.keyDown = function(e) {try{
             document.getElementById('Z').style.color = '#F00';
             input.mode = 'attacking';
         }
+        if (key === 'x') {
+            document.getElementById('X').style.color = '#F00';
+            input.mode = 'lunging';
+        }
     } else if (input.mode === 'attacking') {
         if (!directionPressed(key, player.attack)) {
             document.getElementById('Z').style.color = '';
-            input.mode = 'playing';
+            if (key === 'x') {
+                document.getElementById('X').style.color = '#F00';
+                input.mode = 'lunging';
+            } else {
+                input.mode = 'playing';
+            }
+        }
+    } else if (input.mode === 'lunging') {
+        if (!directionPressed(key, player.lunge)) {
+            document.getElementById('X').style.color = '';
+            if (key === 'z') {
+                document.getElementById('Z').style.color = '#F00';
+                input.mode = 'attacking';
+            } else {
+                input.mode = 'playing';
+            }
         }
     }
 }catch(e){console.log(e)}};
@@ -237,6 +257,20 @@ document.getElementById('Z').addEventListener('click', function() {
         document.getElementById('help').style.display = 'none';
         document.getElementById('Z').style.color = '#F00';
         input.mode = 'attacking';
+    }
+}, false);
+
+// click on Lunge buttun
+document.getElementById('X').addEventListener('click', function() {
+    if (input.mode === 'lunging') {
+        document.getElementById('X').style.color = '';
+        input.mode = 'playing';
+    } else if (!game.player.dead) {
+        document.getElementById('Z').style.color = '';
+        document.getElementById('Help-button').style.color = '';
+        document.getElementById('help').style.display = 'none';
+        document.getElementById('X').style.color = '#F00';
+        input.mode = 'lunging';
     }
 }, false);
 
