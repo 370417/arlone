@@ -25,8 +25,6 @@ var distance = function(dx, dy) {
 
 Actor.attack = function(x, y) {
     if (this.name === 'player') {
-        // The next line really should go in input.js
-        document.getElementById('Z').style.color = '';
         input.mode = 'animating';
     }
     this.attackType = 'feint';
@@ -61,7 +59,6 @@ Actor.attack = function(x, y) {
 
 Actor.lunge = function(x, y) {
     if (this.name === 'player') {
-        document.getElementById('X').style.color = '';
         input.mode = 'animating';
     }
     this.lungeType = 'feint';
@@ -296,33 +293,82 @@ Actor.doLunge = function() {
     } else {
         var destinationX = this.x + this.lungeDirectionX;
         var destinationY = this.y + this.lungeDirectionY;
+        var destinationInfo = Tiles[game.level.map[destinationX][destinationY]];
         var targetX = this.x + 2 * this.lungeDirectionX;
         var targetY = this.y + 2 * this.lungeDirectionY;
 
         // check if there is a monster in the way
         for (var i = 0; i < game.level.monsters.length; i++) {
-            var monster = window.game.level.monsters[i];
+            var monster = game.level.monsters[i];
             if (destinationX === monster.x && destinationY === monster.y && !monster.dead) {
                 if (this.name === 'player') {
                     Buffer.log('You bump the ' + monster.name + '. Nothing happens.');
                 }
-                Schedule.add(this, this.delay);
-                Schedule.advance().act();
+                this.lungeDirectionX = 0;
+                this.lungeDirectionY = 0;
                 return false;
             }
+        }
+
+        // check if player is in the way
+        if (this.name !== 'player') {
+            var player = game.player;
+            if (destinationX === player.x && destinationY === player.y) {
+                this.lungeDirectionX = 0;
+                this.lungeDirectionY = 0;
+                this.lungeTarget = undefined;
+                return false;
+            }
+        }
+
+        // check if the tile is passable
+        if (destinationInfo.passable) {
+            if (game.level.map[this.x][this.y] === 'openDoor') {
+                game.level.map[this.x][this.y] = 'door';
+            }
+            this.x = destinationX;
+            this.y = destinationY;
+            if (this.name === 'player') {
+                game.level.fov(this.x, this.y, 9e9);
+            }
+        } else {
+            this.lungeDirectionX = 0;
+            this.lungeDirectionY = 0;
+            this.lungeTarget = undefined;
+            return false;
         }
 
         game.level.attacks.push([targetX, targetY]);
         for (var i = 0; i < game.level.monsters.length; i++) {
             var monster = game.level.monsters[i];
             if (targetX == monster.x && targetY == monster.y) {
+                // riposte
+                if (this.x === monster.x + monster.attackDirectionX && this.y === monster.y + monster.attackDirectionY) {
+                    // kill this
+                    if (this.name === 'player') {
+                        game.player.dead = true;
+                        game.level.draw(game.player);
+                        Buffer.log('The ' + monster.name + ' parries your lunge and ripostes, killing you. You die...');
+                        return true;
+                    } else {
+                        this.dead = true;
+                    }
+                }
                 this.attackType = 'kill';
                 this.attackTarget = monster;
                 if (this.name === 'player') {
                     this.attackType = 'playerkill';
                 }
                 monster.dead = true;
+            }
+        }
+
+        // kill dead monsters
+        for (var i = 0; i < game.level.monsters.length;) {
+            if (game.level.monsters[i].dead) {
                 game.level.monsters.splice(i, 1);
+            } else {
+                i++;
             }
         }
 

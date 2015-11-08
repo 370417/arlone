@@ -182,7 +182,9 @@ input.keyDown = function(e) {try{
             input.mode = 'lunging';
         }
     } else if (input.mode === 'attacking') {
-        if (!directionPressed(key, player.attack)) {
+        if (directionPressed(key, player.attack)) {
+            document.getElementById('Z').style.color = '';
+        } else {
             document.getElementById('Z').style.color = '';
             if (key === 'x') {
                 document.getElementById('X').style.color = '#F00';
@@ -192,7 +194,9 @@ input.keyDown = function(e) {try{
             }
         }
     } else if (input.mode === 'lunging') {
-        if (!directionPressed(key, player.lunge)) {
+        if (directionPressed(key, player.lunge)) {
+            document.getElementById('X').style.color = '';
+        } else {
             document.getElementById('X').style.color = '';
             if (key === 'z') {
                 document.getElementById('Z').style.color = '#F00';
@@ -208,6 +212,11 @@ input.keyUp = function(e) {
     var key = input.keyCode[e.keyCode] || e.key || 'Unknown';
     var player = window.game.player;
 
+    /**
+     * Call a callback based on what directional key the player released.
+     * The callback must have arguments x and y that specify direction.
+     * @return {boolean} - whether or not a direction key was released
+     */
     var directionReleased = function(key, callback) {
         if (input.pressed === 'up' && (key === 'Up' || key === 'ArrowUp' || key === 'w')) {
             input.pressed = '';
@@ -216,27 +225,31 @@ input.keyUp = function(e) {
             }
             input.movedDiagonally = false;
         }
-        if (input.pressed === 'left' && (key === 'Left' || key === 'ArrowLeft' || key === 'a')) {
+        else if (input.pressed === 'left' && (key === 'Left' || key === 'ArrowLeft' || key === 'a')) {
             input.pressed = '';
             if (!input.movedDiagonally) {
                 callback.call(game.player, -1, 0);
             }
             input.movedDiagonally = false;
         }
-        if (input.pressed === 'down' && (key === 'Down' || key === 'ArrowDown' || key === 's')) {
+        else if (input.pressed === 'down' && (key === 'Down' || key === 'ArrowDown' || key === 's')) {
             input.pressed = '';
             if (!input.movedDiagonally) {
                 callback.call(game.player, 0, 1);
             }
             input.movedDiagonally = false;
         }
-        if (input.pressed === 'right' && (key === 'Right' || key === 'ArrowRight' || key === 'd')) {
+        else if (input.pressed === 'right' && (key === 'Right' || key === 'ArrowRight' || key === 'd')) {
             input.pressed = '';
             if (!input.movedDiagonally) {
                 callback.call(game.player, 1, 0);
             }
             input.movedDiagonally = false;
         }
+        else {
+            return false;
+        }
+        return true;
     };
 
     if (input.mode === 'playing') {
