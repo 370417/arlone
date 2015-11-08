@@ -37,9 +37,6 @@ Actor.attack = function(x, y) {
     var targetY = this.y + y;
     for (var i = 0; i < game.level.monsters.length; i++) {
         var monster = game.level.monsters[i];
-        if (monster.attackDirectionX || monster.attackDirectionY) {
-
-        }
         if (targetX === monster.x && targetY === monster.y) {
             this.attackType = 'dodge';
             if (this.name === 'player') {
@@ -47,12 +44,11 @@ Actor.attack = function(x, y) {
             }
             this.attackTarget = monster;
         }
-        if (targetX === game.player.x && targetY === game.player.y) {
-            this.attackType = 'playerdodge';
-            this.attackTarget = game.player;
-        }
     }
-
+    if (targetX === game.player.x && targetY === game.player.y) {
+        this.attackType = 'playerdodge';
+        this.attackTarget = game.player;
+    }
     Schedule.add(this, this.delay);
     Schedule.advance().act();
 };
@@ -67,10 +63,34 @@ Actor.lunge = function(x, y) {
     }
     this.lungeDirectionX = x;
     this.lungeDirectionY = y;
+    var destinationX = this.x + x;
+    var destinationY = this.y + y;
     var targetX = this.x + 2 * x;
     var targetY = this.y + 2 * y;
-    // stuff to determine lungeType
-
+    for (var i = 0; i < game.level.monsters.length; i++) {
+        var monster = game.level.monsters[i];
+        if (targetX === monster.x && targetY === monster.y) {
+            this.lungeType = 'dodge';
+            if (this.name === 'player') {
+                this.lungeType = 'dodgeplayer';
+            }
+            this.lungeTarget = monster;
+            if (destinationX === monster.x + monster.attackDirectionX && destinationY === monster.y + monster.attackDirectionY) {
+                this.lungeType = 'parry';
+                if (this.name === 'player') {
+                    this.lungeType = 'playerparry';
+                }
+            }
+        }
+    }
+    if (targetX === game.player.x && targetY === game.player.y) {
+        this.lungeType = 'playerdodge';
+        this.lungeTarget = game.player;
+        if (destinationX === game.player.x + game.player.attackDirectionX && destinationY === game.player.y + game.player.attackDirectionY) {
+            this.lungeType = 'parryplayer';
+            this.lungeTarget = game.player;
+        }
+    }
     Schedule.add(this, this.delay);
     Schedule.advance().act();
 };
@@ -287,6 +307,9 @@ Actor.doAttack = function() {
     }
 };
 
+/**
+ * Lunge if there is a lunge direction specified
+ */
 Actor.doLunge = function() {
     if (this.lungeDirectionX === 0 && this.lungeDirectionY === 0) {
         return false;
@@ -338,29 +361,39 @@ Actor.doLunge = function() {
             return false;
         }
 
-        game.level.attacks.push([targetX, targetY]);
         for (var i = 0; i < game.level.monsters.length; i++) {
             var monster = game.level.monsters[i];
             if (targetX == monster.x && targetY == monster.y) {
                 // riposte
                 if (this.x === monster.x + monster.attackDirectionX && this.y === monster.y + monster.attackDirectionY) {
-                    // kill this
                     if (this.name === 'player') {
                         game.player.dead = true;
                         game.level.draw(game.player);
-                        Buffer.log('The ' + monster.name + ' parries your lunge and ripostes, killing you. You die...');
+                        Buffer.log('The ' + monster.name + ' parries your lunge and kills you. You die...');
                         return true;
                     } else {
                         this.dead = true;
                     }
                 }
-                this.attackType = 'kill';
-                this.attackTarget = monster;
+                this.lungeTarget = monster;
                 if (this.name === 'player') {
-                    this.attackType = 'playerkill';
+                    if (this.lungeType !== 'playerparry') {
+                        this.lungeType = 'playerkill';
+                    }
+                } else if (this.lungeType != 'parry') {
+                    this.lungeType = 'kill';
                 }
                 monster.dead = true;
             }
+        }
+        if (targetX === game.player.x && targetY === game.player.y) {
+            if (this.lungeType !== 'parryplayer') {
+                this.lungeType = 'kill';
+            }
+            Buffer.log('The ' + this.name + ' kills you. You die . . .');
+            game.player.dead = true;
+            game.level.draw(game.player);
+            return true;
         }
 
         // kill dead monsters
@@ -372,6 +405,38 @@ Actor.doLunge = function() {
             }
         }
 
+        if (this.lungeType === 'feint') {
+            Buffer.log('The ' + this.name + ' lunges at the air.');
+        }
+        else if (this.lungeType === 'playerfeint') {
+            Buffer.log('You lunge at the air.');
+        }
+        else if (this.lungeType === 'dodge') {
+            Buffer.log('The ' + this.lungeTarget.name + ' dodges the ' + this.name + '\'s lunge.');
+        }
+        else if (this.lungeType === 'dodgeplayer') {
+            Buffer.log('The ' + this.lungeTarget.name + ' dodges your lunge.');
+        }
+        else if (this.lungeType === 'playerdodge') {
+            Buffer.log('You dodge the ' + this.name + '\'s lunge.');
+        }
+        else if (this.lungeType === 'kill') {
+            Buffer.log('The ' + this.name + ' kills the ' + this.lungeTarget.name + '.');
+        }
+        else if (this.lungeType === 'playerkill') {
+            Buffer.log('You kill the ' + this.lungeTarget.name + '.');
+        }
+        else if (this.lungeType === 'parry') {
+            Buffer.log('The ' + this.name + ' parries the ' + this.lungeTarget.name + '\'s attack and kills it.');
+        }
+        else if (this.lungeType === 'parryplayer') {
+            Buffer.log('The ' + this.name + ' parries your attack and kills you.');
+        }
+        else if (this.lungeType === 'playerparry') {
+            Buffer.log('You parry the ' + this.lungeTarget.name + '\'s attack and kill it.');
+        }
+
+        game.level.attacks.push([targetX, targetY]);
         this.lungeDirectionX = 0;
         this.lungeDirectionY = 0;
         this.lungeTarget = undefined;

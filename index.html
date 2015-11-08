@@ -7,7 +7,7 @@
   </head>
   <body>
     <div id="game">
-      <div id="buffer"><div>Lunging has not been implemented.</div><div>Use the arrow keys to move, Z to attack, and X to lunge.</div><div>Press ? for help.</div></div>
+      <div id="buffer"><div>Welcome to Arlone!</div><div>Use the arrow keys to move, Z to attack, and X to lunge.</div><div>Press ? for help.</div></div>
       <div id="bottom">
         <span class="button" id="Z">[Z] Attack</span><span class="button" id="X">[X] Lunge</span><span class="button" id="Help-button">[?] Help</span><span class="button" id="ascii-button">[@] ASCII</span><span class="button" id="tiles-button">[<div id="hoplite">.</div>] Tiles</span>
       </div>
@@ -17,16 +17,11 @@
         WASD and vi keys work too.<br><br>
         Attack by pressing [Z] and then a direction.<br>
         Similarly, lunge by pressing [X] and then a direction.<br><br>
-        Open this help screen again with the [?] key.<br><br>
-        Tiles<br>
-        <span class="tile" style="color: rgb(255, 255, 255)">@</span> you<br>
-        <span class="tile" style="color: rgb(185, 185, 185)">·</span> floor<br>
-        <span class="tile" style="color: rgb(200, 200, 200)">#</span> wall<br>
-        <span class="tile" style="color: rgb(222, 111,  55)">+</span> closed door<br>
-        <span class="tile" style="color: rgb(222, 111,  55)">−</span> open door
+        Attacks and lunges are executed the turn after you input them, so plan your moves carefully. Enemies will have a chance to move out of the way of an attack.<br><br>
+        Open this help screen again with the [?] key.
       </div>
+      <br>Some sprites are based off of <a href="http://opengameart.org/content/loveable-rogue">Lovable Rogue</a> and <a href="http://eight2empire.blogspot.com/p/sprite-downloads.html">eight2empire</a>.
     </div>
-    Some sprites are based off of <a href="http://opengameart.org/content/loveable-rogue">Lovable Rogue</a> and <a href="http://eight2empire.blogspot.com/p/sprite-downloads.html">eight2empire</a>.
     <script src="src/font.js"></script>
     <script src="src/prng.js"></script>
     <script src="src/schedule.js"></script>
