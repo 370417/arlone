@@ -242,7 +242,13 @@ input.keyUp = function(e) {
     if (input.mode === 'playing') {
         directionReleased(key, player.move);
     } else if (input.mode === 'attacking') {
-        directionReleased(key, player.attack);
+        if (directionReleased(key, player.attack)) {
+            document.getElementById('Z').style.color = '';
+        }
+    } else if (input.mode === 'lunging') {
+        if (directionReleased(key, player.lunge)) {
+            document.getElementById('X').style.color = '';
+        }
     }
 };
 

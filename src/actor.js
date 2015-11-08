@@ -86,7 +86,7 @@ Actor.move = function(x, y) {
     if (x === 0 && y === 0) {
         Schedule.add(this, this.delay);
         Schedule.advance().act();
-        return;
+        return false;
     }
 
     var destination = {
@@ -105,7 +105,7 @@ Actor.move = function(x, y) {
             }
             Schedule.add(this, this.delay);
             Schedule.advance().act();
-            return;
+            return false;
         }
     }
 
@@ -294,8 +294,24 @@ Actor.doLunge = function() {
     if (this.lungeDirectionX === 0 && this.lungeDirectionY === 0) {
         return false;
     } else {
+        var destinationX = this.x + this.lungeDirectionX;
+        var destinationY = this.y + this.lungeDirectionY;
         var targetX = this.x + 2 * this.lungeDirectionX;
         var targetY = this.y + 2 * this.lungeDirectionY;
+
+        // check if there is a monster in the way
+        for (var i = 0; i < game.level.monsters.length; i++) {
+            var monster = window.game.level.monsters[i];
+            if (destinationX === monster.x && destinationY === monster.y && !monster.dead) {
+                if (this.name === 'player') {
+                    Buffer.log('You bump the ' + monster.name + '. Nothing happens.');
+                }
+                Schedule.add(this, this.delay);
+                Schedule.advance().act();
+                return false;
+            }
+        }
+
         game.level.attacks.push([targetX, targetY]);
         for (var i = 0; i < game.level.monsters.length; i++) {
             var monster = game.level.monsters[i];
