@@ -12,7 +12,9 @@ var Actor = {
     lungeTarget: undefined,
     lungeType: 'feint',
     state: 'asleep',
-    lastSeenTarget: [null, null] // Where a monster last saw what it is chasing
+    // Where a monster last saw what is is chasing
+    lastSeenTargetX: null,
+    lastSeenTargetY: null
 };
 
 var distance = function(dx, dy) {
@@ -289,12 +291,32 @@ Actor.doAttack = function() {
 };
 
 Actor.doLunge = function() {
-    if (this.LungeDirectionX === 0 && this.LungeDirectionY === 0) {
-        return;
+    if (this.lungeDirectionX === 0 && this.lungeDirectionY === 0) {
+        return false;
+    } else {
+        var targetX = this.x + 2 * this.lungeDirectionX;
+        var targetY = this.y + 2 * this.lungeDirectionY;
+        game.level.attacks.push([targetX, targetY]);
+        for (var i = 0; i < game.level.monsters.length; i++) {
+            var monster = game.level.monsters[i];
+            if (targetX == monster.x && targetY == monster.y) {
+                this.attackType = 'kill';
+                this.attackTarget = monster;
+                if (this.name === 'player') {
+                    this.attackType = 'playerkill';
+                }
+                monster.dead = true;
+                game.level.monsters.splice(i, 1);
+            }
+        }
+
+        this.lungeDirectionX = 0;
+        this.lungeDirectionY = 0;
+        this.lungeTarget = undefined;
+        Schedule.add(this, this.delay);
+        Schedule.advance().act();
+        return true;
     }
-    var targetX = this.x + 2 * this.lungeDirectionX;
-    var targetY = this.y + 2 * this.lungeDirectionY;
-    game.level.attacks.push([targetX, targetY]);
 };
 
 /**
@@ -323,7 +345,7 @@ Actor.asleep = function(seen) {
          Schedule.add(this, this.delay);
          Schedule.advance().act();
      } else {
-         var direction = this.moveTo(this.lastSeenTarget[0], this.lastSeenTarget[1]);
+         var direction = this.moveTo(this.lastSeenTargetX, this.lastSeenTargetY);
          var dx = direction[0];
          var dy = direction[1];
          if (dx === 0 && dy === 0) {
@@ -347,6 +369,11 @@ Actor.act = function() {
         return;
     }
 
+    //var lunged = this.doLunge();
+    //if (lunged) {
+    //    return;
+    //}
+
     // asleep
     if (this.state === 'asleep') {
         this.asleep.call(this, 'chasing');
@@ -355,7 +382,8 @@ Actor.act = function() {
     else if (this.state === 'chasing') {
         if (game.level.visible[this.x][this.y]) {
             var player = window.game.player;
-            this.lastSeenTarget = [player.x, player.y];
+            this.lastSeenTargetX = player.x;
+            this.lastSeenTargetY = player.y;
             if (player.x < this.x) {
                 var x = -1;
             } else if (player.x > this.x) {
@@ -442,7 +470,8 @@ Actors.coward.act = function() {
     else if (this.state === 'chasing') {
         if (game.level.visible[this.x][this.y]) {
             var player = window.game.player;
-            this.lastSeenTarget = [player.x, player.y];
+            this.lastSeenTargetX = player.x;
+            this.lastSeenTargetY = player.y;
             if (player.x < this.x) {
                 var x = -1;
             } else if (player.x > this.x) {
@@ -501,7 +530,7 @@ Actors.coward.act = function() {
             Schedule.add(this, this.delay);
             Schedule.advance().act();
         } else {
-            var direction = this.moveTo(this.lastSeenTarget[0], this.lastSeenTarget[1]);
+            var direction = this.moveTo(this.lastSeenTargetX, this.lastSeenTargetY);
             var dx = direction[0];
             var dy = direction[1];
             if (dx === 0 && dy === 0) {

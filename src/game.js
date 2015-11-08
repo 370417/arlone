@@ -42,7 +42,9 @@ var Game = function(seed) {
         if (this.doAttack()) {
             return;
         }
-        //this.doLunge();
+        if (this.doLunge()) {
+            return;
+        }
         level.draw(this);
         // check win condition
         if (!game.level.monsters.length) {
