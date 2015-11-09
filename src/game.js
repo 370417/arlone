@@ -43,7 +43,7 @@ var Game = function(seed) {
         // check win condition
         if (!game.level.monsters.length) {
             Buffer.log('A winner is you!');
-            return;
+            //return;
         }
         input.mode = 'playing';
     };

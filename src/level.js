@@ -230,13 +230,21 @@ var map = function(player, depth, prng, w, h) {
             map[exitX][exitY] = 'stairsDown';
             options.exit = true;
         };
-        var monsterRoom = function() {
-            emptyRoom();
-            var monster = prng.random() < 0.5 ? newActor('coward') : newActor('duelist');
-            level.monsters.push(monster);
-            monster.x = x + Math.floor(w * prng.random());
-            monster.y = y + Math.floor(h * prng.random());
-            Schedule.add(monster, 0.1);
+        var monsterRoom = function(noEmpty) {
+            if (!noEmpty) {
+                emptyRoom();
+            }
+            while (prng.random() < 0.5) {
+                var monster = prng.random() < 0.5 ? newActor('coward') : newActor('duelist');
+                level.monsters.push(monster);
+                monster.x = 0;
+                monster.y = 0;
+                while (map[monster.x][monster.y] === 'wall') {
+                    monster.x = x + Math.floor(w * prng.random());
+                    monster.y = y + Math.floor(h * prng.random());
+                }
+                Schedule.add(monster, 0.1);
+            }
         };
         var horizColumnRoom = function() {
             emptyRoom();
@@ -244,6 +252,7 @@ var map = function(player, depth, prng, w, h) {
                 map[i][y + 1] = 'wall';
                 map[i][y + h - 2] = 'wall';
             }
+            monsterRoom(true);
         };
         var vertColumnRoom = function() {
             emptyRoom();
@@ -251,6 +260,7 @@ var map = function(player, depth, prng, w, h) {
                 map[x + 1][i] = 'wall';
                 map[x + w - 2][i] = 'wall';
             }
+            monsterRoom(true);
         };
         var flatTopHexRoom = function() {
             emptyRoom();
@@ -279,7 +289,7 @@ var map = function(player, depth, prng, w, h) {
         } else if (!options.exit) {
             exitRoom();
         } else {
-            var possibleRooms = [monsterRoom, monsterRoom, emptyRoom];
+            var possibleRooms = [monsterRoom];
             if (w > 5 && h > 5) {
                 if (doors.length === 1) {
                     possibleRooms.push(flatTopHexRoom);
