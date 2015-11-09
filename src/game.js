@@ -24,19 +24,13 @@ var Game = function(seed) {
     // create the player
     this.player = newActor('player');
     this.player.delay = 1;
+    this.player.x = 0;
+    this.player.y = 0;
     Schedule.add(this.player, 0);
 
     // create the first level
     this.level = new Level(this.player, this.depth, this.depth + this.levelSeeds[1]);
     var level = this.level;
-
-    // place the player
-    this.player.x = 0;
-    this.player.y = 0;
-    while (this.level.map[this.player.x][this.player.y] !== 'floor') {
-        this.player.x = 1 + Math.floor((Display.w - 2) * this.prng.random());
-        this.player.y = 1 + Math.floor((Display.h - 2) * this.prng.random());
-    }
 
     this.player.act = function() {
         if (this.doAttack()) {

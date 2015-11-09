@@ -2,7 +2,6 @@ var map = function(player, depth, prng, w, h) {
     var map = [];
 
     // fill the map with walls
-    // outer edges are filled with outer walls
     for (var x = 0; x < w; x++) {
         map.push([]);
         for (var y = 0; y < h; y++) {
@@ -176,14 +175,9 @@ var map = function(player, depth, prng, w, h) {
         }
     }
 
-    // add the rooms to the map
+    // prepare to add door info to rooms
     for (var i = 0; i < rooms.length; i++) {
-        var room = rooms[i];
-        for (var x = room.x; x < room.x + room.w; x++) {
-            for (var y = room.y; y < room.y + room.h; y++) {
-                map[x][y] = 'floor';
-            }
-        }
+        rooms[i].doors = [];
     }
 
     // place the doors on the map
@@ -208,17 +202,116 @@ var map = function(player, depth, prng, w, h) {
                     console.log('Oops!');
                 }
                 map[x][y] = prng.random() < 0.5 ? 'door' : 'openDoor';
+                rooms[i].doors.push([x, y]);
+                rooms[j].doors.push([x, y]);
             }
         }
     }
 
-    // create monsters
+    var generateRoom = function(map, x, y, w, h, doors, options) {
+        var level = this;
+        var emptyRoom = function() {
+            for (var i = x; i < x + w; i++) {
+                for (var j = y; j < y + h; j++) {
+                    map[i][j] = 'floor';
+                }
+            }
+        };
+        var playerRoom = function() {
+            emptyRoom();
+            player.x = x + Math.floor(w * prng.random());
+            player.y = y + Math.floor(h * prng.random());
+            options.player = true;
+        };
+        var exitRoom = function() {
+            emptyRoom();
+            var exitX = x + Math.floor(w * prng.random());
+            var exitY = y + Math.floor(h * prng.random());
+            map[exitX][exitY] = 'stairsDown';
+            options.exit = true;
+        };
+        var monsterRoom = function() {
+            emptyRoom();
+            var monster = prng.random() < 0.5 ? newActor('coward') : newActor('duelist');
+            level.monsters.push(monster);
+            monster.x = x + Math.floor(w * prng.random());
+            monster.y = y + Math.floor(h * prng.random());
+            Schedule.add(monster, 0.1);
+        };
+        var horizColumnRoom = function() {
+            emptyRoom();
+            for (var i = x + 1; i < x + w; i += 2) {
+                map[i][y + 1] = 'wall';
+                map[i][y + h - 2] = 'wall';
+            }
+        };
+        var vertColumnRoom = function() {
+            emptyRoom();
+            for (var i = y + 1; i < y + h; i += 2) {
+                map[x + 1][i] = 'wall';
+                map[x + w - 2][i] = 'wall';
+            }
+        };
+        var flatTopHexRoom = function() {
+            emptyRoom();
+            var centerX = x + (w - 1) / 2;
+            var centerY = y + (h - 1) / 2;
+            map[centerX-1][centerY-2] = 'wall';
+            map[centerX+1][centerY-2] = 'wall';
+            map[centerX-1][centerY+2] = 'wall';
+            map[centerX+1][centerY+2] = 'wall';
+            map[centerX-2][centerY] = 'wall';
+            map[centerX+2][centerY] = 'wall';
+        };
+        var pointTopHexRoom = function() {
+            emptyRoom();
+            var centerX = x + (w - 1) / 2;
+            var centerY = y + (h - 1) / 2;
+            map[centerX-2][centerY-1] = 'wall';
+            map[centerX+2][centerY-1] = 'wall';
+            map[centerX-2][centerY+1] = 'wall';
+            map[centerX+2][centerY+1] = 'wall';
+            map[centerX][centerY-2] = 'wall';
+            map[centerX][centerY+2] = 'wall';
+        };
+        if (!options.player) {
+            playerRoom();
+        } else if (!options.exit) {
+            exitRoom();
+        } else {
+            var possibleRooms = [monsterRoom, monsterRoom, emptyRoom];
+            if (w > 5 && h > 5) {
+                if (doors.length === 1) {
+                    possibleRooms.push(flatTopHexRoom);
+                    possibleRooms.push(pointTopHexRoom);
+                } else {
+                    possibleRooms.push(horizColumnRoom);
+                    possibleRooms.push(vertColumnRoom);
+                }
+            }
+            possibleRooms[Math.floor(possibleRooms.length * prng.random())]();
+        }
+        return options;
+    }
+
+    // add the rooms to the map
+    var options = {
+        player: false,
+        exit: false
+    };
+    // shuffle the rooms
+    (function() {
+        var j, temp;
+        for (var i = rooms.length - 1; i > 0; i--) {
+            j = Math.floor((i + 1) * prng.random());
+            temp = rooms[i];
+            rooms[i] = rooms[j];
+            rooms[j] = temp;
+        }
+    })();
     for (var i = 0; i < rooms.length; i++) {
-        var monster = prng.random() < 0.5 ? newActor('coward') : newActor('duelist');
-        this.monsters.push(monster);
-        monster.x = rooms[i].x + Math.floor(rooms[i].w * prng.random());
-        monster.y = rooms[i].y + Math.floor(rooms[i].h * prng.random());
-        Schedule.add(monster, 0.1);
+        var room = rooms[i];
+        options = generateRoom.call(this, map, room.x, room.y, room.w, room.h, room.doors, options);
     }
 
     return map;

@@ -45,6 +45,15 @@ var Tiles = {
         y: 4,
         desc: 'An open door<br>You can close it by walking through it.'
     },
+    stairsDown: {
+        char: '>',
+        passable: true,
+        transparent: true,
+        fg: [185, 185, 185],
+        x: 4,
+        y: 4,
+        desc: 'Stairs leading downward.<br>For now, these don\'t do anything.'
+    },
     attack: {
         char: 'X',
         fg: [255, 0, 0],
