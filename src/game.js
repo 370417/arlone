@@ -22,7 +22,8 @@ var Game = function(seed) {
     this.oldLevel = undefined;
 
     // create the player
-    this.player = newActor('player');
+    this.player = Object.create(Actor);
+    this.player.name = 'player';
     this.player.delay = 1;
     this.player.x = 0;
     this.player.y = 0;

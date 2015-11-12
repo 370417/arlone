@@ -434,6 +434,8 @@ Actor.doLunge = function() {
         }
         else if (this.lungeType === 'playerparry') {
             Buffer.log('You parry the ' + this.lungeTarget.name + '\'s attack and kill it.');
+        } else {
+            console.log(this.lungeType);
         }
 
         game.level.attacks.push([targetX, targetY]);
@@ -562,19 +564,20 @@ Actor.act = function() {
     }
 };
 
-// An object containing the prototypes of the actors
-// These prototypes inherit from the Actor prototype
-var Actors = {};
+var Dragon = function() {
+    var dragon = Object.create(Dragon.prototype);
+    dragon.name = 'dragon';
+    return dragon;
+};
+Dragon.prototype = Object.create(Actor);
 
-Actors.player = Object.create(Actor);
-Actors.player.name = 'player';
-
-Actors.duelist = Object.create(Actor);
-Actors.duelist.name = 'dragon';
-
-Actors.coward = Object.create(Actor);
-Actors.coward.name = 'rat';
-Actors.coward.chasing = function() {
+var Rat = function() {
+    var rat = Object.create(Rat.prototype);
+    rat.name = 'rat';
+    return rat;
+};
+Rat.prototype = Object.create(Actor);
+Rat.prototype.chasing = function() {
     if (game.level.visible[this.x][this.y]) {
         var player = window.game.player;
         this.lastSeenTargetX = player.x;
@@ -629,107 +632,4 @@ Actors.coward.chasing = function() {
         this.state = 'searching';
         this.act();
     }
-};
-/*
-Actors.coward.act = function() {
-    // if the monster is dead
-    if (this.dead) {
-        Schedule.advance().act();
-        return;
-    }
-
-    var attacked = this.doAttack();
-    if (attacked) {
-        return;
-    }
-
-    // asleep
-    if (this.state === 'asleep') {
-        if (game.level.visible[this.x][this.y]) {
-            this.state = 'chasing';
-            Buffer.log('The ' + this.name + ' notices you.');
-        }
-        Schedule.add(this, this.delay);
-        Schedule.advance().act();
-    }
-    // chasing
-    else if (this.state === 'chasing') {
-        if (game.level.visible[this.x][this.y]) {
-            var player = window.game.player;
-            this.lastSeenTargetX = player.x;
-            this.lastSeenTargetY = player.y;
-            if (player.x < this.x) {
-                var x = -1;
-            } else if (player.x > this.x) {
-                var x = 1;
-            } else {
-                var x = 0;
-            }
-            if (player.y < this.y) {
-                var y = -1;
-            } else if (player.y > this.y) {
-                var y = 1;
-            } else {
-                var y = 0;
-            }
-            // see if there are any other monsters in the player's sight
-            var afraid = true;
-            for (var i = 0; i < game.level.monsters.length; i++) {
-                var monster = game.level.monsters[i];
-                if (game.level.visible[monster.x][monster.y] && monster !== this) {
-                    afraid = false;
-                }
-            }
-            if (afraid) {
-                var direction = this.moveFrom(player.x, player.y);
-                var dx = direction[0];
-                var dy = direction[1];
-                if (dx === 0 && dy === 0) {
-                    this.attack(x, y);
-                } else {
-                    this.move(dx, dy);
-                }
-            }
-            else if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) > 1) {
-                var direction = this.moveTo(player.x, player.y);
-                var dx = direction[0];
-                var dy = direction[1];
-                if (dx === 0 && dy === 0) {
-                    this.state = 'searching';
-                    this.act();
-                } else {
-                    this.move(dx, dy);
-                }
-            }
-            else if (Math.max(Math.abs(player.x - this.x), Math.abs(player.y - this.y)) === 1) {
-                this.attack(x, y);
-            }
-        } else {
-            this.state = 'searching';
-            this.act();
-        }
-    }
-    // searching
-    else if (this.state === 'searching') {
-        if (game.level.visible[this.x][this.y]) {
-            this.state = 'chasing';
-            Schedule.add(this, this.delay);
-            Schedule.advance().act();
-        } else {
-            var direction = this.moveTo(this.lastSeenTargetX, this.lastSeenTargetY);
-            var dx = direction[0];
-            var dy = direction[1];
-            if (dx === 0 && dy === 0) {
-                this.state = 'asleep';
-                this.act();
-            } else {
-                this.move(dx, dy);
-            }
-        }
-    }
-};*/
-
-var newActor = function(name) {
-    var actor = Object.create(Actors[name]);
-    return actor;
 };

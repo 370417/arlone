@@ -235,7 +235,7 @@ var map = function(player, depth, prng, w, h) {
                 emptyRoom();
             }
             while (prng.random() < 0.5) {
-                var monster = prng.random() < 0.5 ? newActor('coward') : newActor('duelist');
+                var monster = prng.random() < 0.5 ? Rat() : Dragon();
                 level.monsters.push(monster);
                 monster.x = 0;
                 monster.y = 0;
@@ -458,7 +458,7 @@ Level.prototype.draw = function(player) {
     Display.ctx.clearRect(0, 0, w * Display.scale * Display.cw, h * Display.scale * Display.ch);
     for (var x = 0; x < w; x++) {
         for (var y = 0; y < h; y++) {
-            if (this.visible[x][y]) {
+            if (this.visible[x][y]/* || (x !== player.x || y !== player.y)*/) {
                 for (var i = 0; i < this.attacks.length; i++) {
                     if (x === this.attacks[i][0] && y === this.attacks[i][1]) {
                         if (Display.useTiles) {
