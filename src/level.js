@@ -386,21 +386,21 @@ Level.prototype.fov = function(cx, cy, range) {
             var realy = my(x, y);
             var transparent = Tiles[this.map[realx][realy]].transparent;
             if (transparent) {
-                if (start >= end) {
-                    return;
-                }
                 if (x >= y * start && x <= y * end) {
                     reveal(this, realx, realy);
                 }
             } else {
-                if (x >= (y - 0.5) * start) {
+                if (x >= (y - 0.5) * start && x - 0.5 <= y * end) {
                     reveal(this, realx, realy);
                 }
-                scan.call(this, y + 1, start, (x - 0.5) / (y + 0.5), mx, my, 'wall');
-                start = (x + 0.5) / (y - 0.5);
+                scan.call(this, y + 1, start, (x - 0.5) / y, mx, my);
+                start = (x + 0.5) / y;
+                if (start >= end) {
+                    return;
+                }
             }
         }
-        scan.call(this, y + 1, start, end, mx, my, 'endscan');
+        scan.call(this, y + 1, start, end, mx, my);
     };
     scan.call(this, 1, 0, 1, function(x, y) {
         return cx + x;
