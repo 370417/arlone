@@ -236,6 +236,7 @@ var map = function(player, depth, prng, w, h) {
             }
             while (prng.random() < 0.5) {
                 var monster = prng.random() < 0.5 ? Rat() : Dragon();
+                monster = Bat();
                 level.monsters.push(monster);
                 monster.x = 0;
                 monster.y = 0;

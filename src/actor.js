@@ -633,3 +633,10 @@ Rat.prototype.chasing = function() {
         this.act();
     }
 };
+
+var Bat = function() {
+    var bat = Object.create(Bat.prototype);
+    bat.name = 'bat';
+    return bat;
+};
+Bat.prototype = Object.create(Actor);

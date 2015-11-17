@@ -17,6 +17,7 @@ input.movedDiagonally = false;
 
 // input.keyCode[e.keyCode] === e.key should be true
 input.keyCode = {
+    '32': ' ',
     '37': 'ArrowLeft',
     '38': 'ArrowUp',
     '39': 'ArrowRight',

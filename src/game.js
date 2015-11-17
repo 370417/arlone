@@ -44,7 +44,8 @@ var Game = function(seed) {
         // check win condition
         if (!game.level.monsters.length) {
             Buffer.log('A winner is you!');
-            //return;
+            //game.setMode('gameover');
+            document.body.addEventListener('keydown', gameover.input.keyDown, false);
         }
         input.mode = 'playing';
     };

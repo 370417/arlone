@@ -80,5 +80,12 @@ var Tiles = {
         x: 2,
         y: 2,
         desc: '<div class="monster-desc">A rat<br>Rats run away from you and attack you if cornered. When they are not alone, they charge at you and attack when in range.</div>'
+    },
+    bat: {
+        char: 'B',
+        fg: [255, 255, 255],
+        x: 1,
+        y: 0,
+        desc: '<div class="monster-desc">nananananananana bat!</div>'
     }
 };
